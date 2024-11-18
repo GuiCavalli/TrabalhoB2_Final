@@ -1,25 +1,20 @@
 package br.unipar.trabalhob2
 
-import android.Manifest
 import android.app.Activity
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import androidx.appcompat.app.AppCompatActivity
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
+import androidx.appcompat.app.AppCompatActivity
 
 class CadastrarEventosActivity : AppCompatActivity() {
 
     private val PICK_IMAGE_REQUEST = 1
-    private val PERMISSION_REQUEST_CODE = 100
     private var selectedImageUri: Uri? = null
     private lateinit var imgEvento: ImageView
 
@@ -34,16 +29,6 @@ class CadastrarEventosActivity : AppCompatActivity() {
         val horaEventoInput: EditText = findViewById(R.id.input_hora_evento)
         val addImageButton: Button = findViewById(R.id.btn_add_image_evento)
         imgEvento = findViewById(R.id.img_evento)
-
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) !=
-            PackageManager.PERMISSION_GRANTED) {
-
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), PERMISSION_REQUEST_CODE
-            )
-        }
 
         addImageButton.setOnClickListener {
             openGallery()
@@ -95,22 +80,6 @@ class CadastrarEventosActivity : AppCompatActivity() {
             selectedImageUri?.let {
                 val bitmap: Bitmap = MediaStore.Images.Media.getBitmap(contentResolver, it)
                 imgEvento.setImageBitmap(bitmap)
-            }
-        }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-        if (requestCode == PERMISSION_REQUEST_CODE) {
-            if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(
-                    this,
-                    "Permissão de acesso ao armazenamento negada",
-                    Toast.LENGTH_SHORT
-                ).show()
-            } else {
-                Toast.makeText(this, "Permissão concedida", Toast.LENGTH_SHORT).show()
             }
         }
     }
